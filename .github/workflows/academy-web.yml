@@ -23,6 +23,7 @@ jobs:
         run: |
           set -euo pipefail
           base=$(python3 -c 'import json; print(json.load(open("ACA_FORK.json"))["upstreamCommit"])')
+          git cat-file -e "$base^{commit}" 2>/dev/null || git fetch --no-tags origin "$base" --depth=1
           git diff --exit-code "$base" -- LICENSE-MIT LICENSE-APACHE NOTICE
           git diff --check "$base"
           test -f ACA_FORK.md
