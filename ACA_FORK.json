@@ -1,0 +1,16 @@
+{
+  "application": "ACA Motion Studio",
+  "academy": "ALEJANDRO Creative Academy",
+  "upstream": "https://github.com/storytold/effectcraft",
+  "upstreamCommit": "79f695760109d548791558833b7bb1afc4f79308",
+  "branch": "codex/academy-purple-gold",
+  "license": "MIT OR Apache-2.0",
+  "internalIdentifiersPreserved": true,
+  "status": "Implemented source fork; manual Academy WASM build pending. Full upstream CI and browser behavior not yet verified.",
+  "colors": {
+    "purple": "#160f24",
+    "surface": "#241934",
+    "gold": "#d9b567"
+  },
+  "forkURL": "https://github.com/mypurpletimemachine2023/alejandro-motion-studio"
+}

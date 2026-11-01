@@ -1,3 +1,4 @@
+//! ACA derivative: purple surfaces and gold controls; semantic meter/error colors retained.
 //! Design tokens. Every widget reads colours/sizes from [`Tokens`] so themes apply everywhere.
 //!
 //! The default theme follows the look of After Effects' dark UI (values estimated from public
@@ -145,40 +146,40 @@ impl Tokens {
     pub fn for_kind(kind: ThemeKind) -> Self {
         let dark = Tokens {
             kind,
-            app_bg: Color32::from_rgb(0x12, 0x12, 0x12),
-            header_bg: Color32::from_rgb(0x1f, 0x1f, 0x1f),
-            panel_bg: Color32::from_rgb(0x23, 0x23, 0x23),
-            tab_text: Color32::from_rgb(0x9a, 0x9a, 0x9a),
-            tab_text_active: Color32::from_rgb(0xe3, 0xe3, 0xe3),
-            focus: Color32::from_rgb(0x2d, 0x8c, 0xeb),
-            accent: Color32::from_rgb(0x2d, 0x8c, 0xeb),
-            accent_hover: Color32::from_rgb(0x4a, 0xa0, 0xf5),
-            text: Color32::from_rgb(0xc8, 0xc8, 0xc8),
-            text_dim: Color32::from_rgb(0x9a, 0x9a, 0x9a),
+            app_bg: Color32::from_rgb(22, 15, 36),
+            header_bg: Color32::from_rgb(27, 16, 44),
+            panel_bg: Color32::from_rgb(36, 25, 52),
+            tab_text: Color32::from_rgb(190, 174, 205),
+            tab_text_active: Color32::from_rgb(255, 230, 174),
+            focus: Color32::from_rgb(217, 181, 103),
+            accent: Color32::from_rgb(217, 181, 103),
+            accent_hover: Color32::from_rgb(239, 206, 130),
+            text: Color32::from_rgb(243, 233, 217),
+            text_dim: Color32::from_rgb(190, 174, 205),
             text_faint: Color32::from_rgb(0x8c, 0x8c, 0x8c),
             icon: Color32::from_rgb(0xb4, 0xb4, 0xb4),
-            icon_active: Color32::from_rgb(0xf0, 0xf0, 0xf0),
-            hover: Color32::from_rgb(0x30, 0x30, 0x30),
-            pressed: Color32::from_rgb(0x45, 0x45, 0x45),
-            field_bg: Color32::from_rgb(0x17, 0x17, 0x17),
-            field_border: Color32::from_rgb(0x3a, 0x3a, 0x3a),
-            separator: Color32::from_rgb(0x34, 0x34, 0x34),
-            row: Color32::from_rgb(0x23, 0x23, 0x23),
-            row_alt: Color32::from_rgb(0x27, 0x27, 0x27),
-            row_selected: Color32::from_rgb(0x3a, 0x3a, 0x3a),
-            hot_text: Color32::from_rgb(0x3d, 0x8f, 0xf5),
-            tl_bg: Color32::from_rgb(0x1b, 0x1b, 0x1b),
-            tl_ruler_bg: Color32::from_rgb(0x23, 0x23, 0x23),
+            icon_active: Color32::from_rgb(255, 230, 174),
+            hover: Color32::from_rgb(62, 39, 87),
+            pressed: Color32::from_rgb(80, 49, 109),
+            field_bg: Color32::from_rgb(24, 16, 36),
+            field_border: Color32::from_rgb(89, 62, 113),
+            separator: Color32::from_rgb(67, 45, 90),
+            row: Color32::from_rgb(36, 25, 52),
+            row_alt: Color32::from_rgb(40, 28, 57),
+            row_selected: Color32::from_rgb(79, 51, 108),
+            hot_text: Color32::from_rgb(217, 181, 103),
+            tl_bg: Color32::from_rgb(27, 18, 41),
+            tl_ruler_bg: Color32::from_rgb(31, 20, 47),
             tl_ruler_tick: Color32::from_rgb(0x70, 0x70, 0x70),
             tl_ruler_text: Color32::from_rgb(0x9a, 0x9a, 0x9a),
-            cti: Color32::from_rgb(0x2d, 0x8c, 0xeb),
+            cti: Color32::from_rgb(217, 181, 103),
             work_area: Color32::from_rgb(0x4a, 0x4a, 0x4a),
             cache_green: Color32::from_rgb(0x3c, 0xa6, 0x4c),
             cache_blue: Color32::from_rgb(0x3a, 0x6f, 0xd8),
             keyframe: Color32::from_rgb(0xa8, 0xa8, 0xa8),
-            keyframe_selected: Color32::from_rgb(0x3d, 0x8f, 0xf5),
-            pasteboard: Color32::from_rgb(0x1a, 0x1a, 0x1a),
-            timecode: Color32::from_rgb(0x3d, 0x8f, 0xf5),
+            keyframe_selected: Color32::from_rgb(217, 181, 103),
+            pasteboard: Color32::from_rgb(22, 15, 36),
+            timecode: Color32::from_rgb(217, 181, 103),
             danger: Color32::from_rgb(0xe0, 0x4a, 0x3c),
             warning: Color32::from_rgb(0xe8, 0x9a, 0x2c),
             fx_header: Color32::from_rgb(0x2a, 0x2a, 0x2a),
@@ -596,7 +597,7 @@ pub fn apply_visuals(ctx: &egui::Context, t: &Tokens) {
     v.faint_bg_color = t.row_alt;
     v.override_text_color = Some(t.text);
     v.selection.bg_fill = t.accent;
-    v.selection.stroke = Stroke::new(1.0, Color32::WHITE);
+    v.selection.stroke = Stroke::new(1.0, if t.accent == Color32::from_rgb(217, 181, 103) { Color32::from_rgb(24, 14, 42) } else { Color32::WHITE });
     v.hyperlink_color = t.accent;
     v.window_stroke = Stroke::new(1.0, t.field_border);
     v.window_corner_radius = egui::CornerRadius::same(8);

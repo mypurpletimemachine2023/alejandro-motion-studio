@@ -196,7 +196,7 @@ fn main() -> eframe::Result {
     let notice = launch.notice.take();
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_title("EffectCraft")
+            .with_title("ACA Motion Studio")
             .with_inner_size(window::DEFAULT_SIZE)
             .with_min_inner_size(window::MIN_SIZE)
             .with_drag_and_drop(true)
@@ -437,7 +437,7 @@ fn startup_failed(e: &eframe::Error, gl_next: bool) {
     }
     let _ = rfd::MessageDialog::new()
         .set_level(rfd::MessageLevel::Error)
-        .set_title("EffectCraft")
+        .set_title("ACA Motion Studio")
         .set_description(message)
         .set_buttons(rfd::MessageButtons::Ok)
         .show();

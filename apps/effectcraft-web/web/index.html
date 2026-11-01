@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#1b1c1f">
-  <meta name="description" content="EffectCraft: motion graphics and visual effects in the browser">
-  <title>EffectCraft</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#160f24">
+  <meta name="description" content="ACA Motion Studio: motion graphics and visual effects in the browser">
+  <title>ACA Motion Studio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23241934%22%2F%3E%3Cpath%20d%3D%22M12%2020l8%208%2012-14%2012%2014%208-8-4%2017H16z%22%20fill%3D%22none%22%20stroke%3D%22%23d9b567%22%20stroke-width%3D%223%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2254%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2221%22%20fill%3D%22%23d9b567%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-256.png">
   <style>
-    html, body { margin: 0; height: 100%; overflow: hidden; background: #1b1c1f; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #160f24; }
     canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
     #loading {
       position: absolute; inset: 0; display: flex; flex-direction: column; gap: 14px;
@@ -34,14 +34,15 @@
       background: #232323; color: #e3e3e3; font: inherit; cursor: pointer;
     }
     #device-lost button:hover { background: #303030; }
-    #device-lost button:last-child { background: #2d8ceb; border-color: #2d8ceb; }
-    #device-lost button:last-child:hover { background: #4aa0f5; }
+    #device-lost button:last-child { background: #d9b567; border-color: #d9b567; }
+    #device-lost button:last-child:hover { background: #efce82; }
     #device-lost button:disabled { opacity: 0.6; cursor: default; }
   </style>
+  <meta name="application-name" content="ACA Motion Studio — ALEJANDRO Creative Academy">
 </head>
 <body>
   <canvas id="effectcraft_canvas"></canvas>
-  <div id="loading"><img src="favicon.svg" alt=""><div id="status">Loading EffectCraft…</div></div>
+  <div id="loading"><img src="favicon.svg" alt=""><div id="status">Loading ACA Motion Studio…</div></div>
   <script type="module">
     import init, * as ec from "./effectcraft_web.js";
     const t0 = performance.now();
@@ -114,7 +115,7 @@
       window.effectcraftLoad.readyMs = performance.now() - t0;
     } catch (e) {
       const s = document.getElementById("status");
-      if (s) { s.className = "err"; s.textContent = "EffectCraft failed to start:\n" + (e && e.stack || e); }
+      if (s) { s.className = "err"; s.textContent = "ACA Motion Studio failed to start:\n" + (e && e.stack || e); }
       window.effectcraftLoad.error = String(e);
       throw e;
     }

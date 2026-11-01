@@ -460,8 +460,8 @@ pub(crate) fn submenu(app: &EffectcraftApp, source: &str, shown: String) -> Stri
 /// Chinese After Effects documentation and the catalogs the sibling Craft apps ship; see the
 /// pull request for the rows taken from #321.
 const SIMPLIFIED_CHINESE: &[(&str, &str, &str)] = &[
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "关于 EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "关于 EffectCraft..."),
     ("", "Settings...", "设置..."),
     ("app.settings", "General...", "常规..."),
     ("app.settings", "Startup & Repair...", "启动和修复..."),
@@ -1096,8 +1096,8 @@ const SIMPLIFIED_CHINESE: &[(&str, &str, &str)] = &[
 
 /// Swedish (`sv`), written from the English source.
 const SWEDISH: &[(&str, &str, &str)] = &[
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "Om EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "Om EffectCraft..."),
     ("", "Settings...", "Inställningar..."),
     ("app.settings", "General...", "Allmänt..."),
     ("app.settings", "Startup & Repair...", "Start och reparation..."),
@@ -1734,8 +1734,8 @@ const SWEDISH: &[(&str, &str, &str)] = &[
 /// entry per fixed menu row of the engine's menu tree, mirroring `SIMPLIFIED_CHINESE` in the
 /// vocabulary the sibling Craft apps' zh-hant catalogs use.
 const TRADITIONAL_CHINESE: &[(&str, &str, &str)] = &[
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "關於 EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "關於 EffectCraft..."),
     ("", "Settings...", "設定..."),
     ("app.settings", "General...", "一般..."),
     ("app.settings", "Startup & Repair...", "啟動和修復..."),
@@ -2369,8 +2369,8 @@ const TRADITIONAL_CHINESE: &[(&str, &str, &str)] = &[
 ];
 
 const JAPANESE: &[(&str, &str, &str)] = &[
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "EffectCraftについて..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "EffectCraftについて..."),
     ("", "Settings...", "設定..."),
     ("app.settings", "General...", "一般..."),
     ("app.settings", "Startup & Repair...", "起動と修復..."),
@@ -3007,8 +3007,8 @@ const JAPANESE: &[(&str, &str, &str)] = &[
 /// Ukrainian motion-graphics vocabulary. Product names and technical identifiers stay verbatim.
 /// The (command, source) keys match the other catalogs; no proprietary localization was used.
 const UKRAINIAN: &[(&str, &str, &str)] = &[
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "Про EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "Про EffectCraft..."),
     ("", "Settings...", "Налаштування..."),
     ("app.settings", "General...", "Загальні..."),
     ("app.settings", "Startup & Repair...", "Запуск і відновлення..."),
@@ -3646,8 +3646,8 @@ const UKRAINIAN: &[(&str, &str, &str)] = &[
 /// Wording follows Adobe's Spanish After Effects documentation (helpx.adobe.com/es) where it
 /// names the feature, and macOS Spanish for the app menu.
 const SPANISH: &[(&str, &str, &str)] = &[
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "Acerca de EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "Acerca de EffectCraft..."),
     ("", "Settings...", "Ajustes..."),
     ("app.settings", "General...", "General..."),
     ("app.settings", "Startup & Repair...", "Inicio y reparación..."),
@@ -4283,8 +4283,8 @@ const SPANISH: &[(&str, &str, &str)] = &[
 /// Brazilian Portuguese: the same (command, English label) keys as `JAPANESE`, one entry
 /// per fixed menu row of the engine's menu tree.
 const PORTUGUESE: &[(&str, &str, &str)] = &[
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "Sobre o EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "Sobre o EffectCraft..."),
     ("", "Settings...", "Configurações..."),
     ("app.settings", "General...", "Geral..."),
     ("app.settings", "Startup & Repair...", "Inicialização e reparo..."),
@@ -4928,8 +4928,8 @@ const RUSSIAN: &[(&str, &str, &str)] = &[
     ("", "Side", "Боковая грань"),
     ("", "Back", "Задняя грань"),
     ("layer.addTextAnimator", "Color", "Цвет"),
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "О EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "О EffectCraft..."),
     ("", "Settings...", "Настройки..."),
     ("app.settings", "General...", "Общие..."),
     ("app.settings", "Startup & Repair...", "Запуск и восстановление..."),
@@ -5565,8 +5565,8 @@ const FRENCH: &[(&str, &str, &str)] = &[
     ("", "Side", "Côté"),
     ("", "Back", "Arrière"),
     ("layer.addTextAnimator", "Color", "Couleur"),
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "À propos d’EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "À propos d’EffectCraft..."),
     ("", "Settings...", "Préférences..."),
     ("app.settings", "General...", "Général..."),
     ("app.settings", "Startup & Repair...", "Démarrage et réparation..."),
@@ -6202,8 +6202,8 @@ const GERMAN: &[(&str, &str, &str)] = &[
     ("", "Side", "Seite"),
     ("", "Back", "Rückseite"),
     ("layer.addTextAnimator", "Color", "Farbe"),
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "Über EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "Über EffectCraft..."),
     ("", "Settings...", "Voreinstellungen..."),
     ("app.settings", "General...", "Allgemein..."),
     ("app.settings", "Startup & Repair...", "Start und Reparatur..."),
@@ -6839,8 +6839,8 @@ const POLISH: &[(&str, &str, &str)] = &[
     ("", "Side", "Bok"),
     ("", "Back", "Tył"),
     ("layer.addTextAnimator", "Color", "Kolor"),
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "O programie EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "O programie EffectCraft..."),
     ("", "Settings...", "Ustawienia..."),
     ("app.settings", "General...", "Ogólne..."),
     ("app.settings", "Startup & Repair...", "Uruchamianie i naprawa..."),
@@ -7473,8 +7473,8 @@ const CZECH: &[(&str, &str, &str)] = &[
     ("", "Side", "Boční strana"),
     ("", "Back", "Zadní strana"),
     ("layer.addTextAnimator", "Color", "Barva"),
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "O aplikaci EffectCraft..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "O aplikaci EffectCraft..."),
     ("", "Settings...", "Nastavení..."),
     ("app.settings", "General...", "Obecné..."),
     ("app.settings", "Startup & Repair...", "Spuštění a oprava..."),
@@ -8107,8 +8107,8 @@ const CZECH: &[(&str, &str, &str)] = &[
 /// the other Craft apps' Georgian catalogs (შრე, საკვანძო კადრი, კომპოზიცია, ნიღაბი); commands are
 /// verbal nouns (შენახვა, გახსნა) and Georgian has no capital letters.
 const GEORGIAN: &[(&str, &str, &str)] = &[
-    ("", "EffectCraft", "EffectCraft"),
-    ("app.about", "About EffectCraft...", "EffectCraft-ის შესახებ..."),
+    ("", "ACA Motion Studio", "ACA Motion Studio"),
+    ("app.about", "About ACA Motion Studio...", "EffectCraft-ის შესახებ..."),
     ("", "Settings...", "პარამეტრები..."),
     ("app.settings", "General...", "ზოგადი..."),
     ("app.settings", "Startup & Repair...", "გაშვება და აღდგენა..."),
