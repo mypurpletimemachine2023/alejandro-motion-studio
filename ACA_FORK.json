@@ -6,7 +6,7 @@
   "branch": "codex/academy-purple-gold",
   "license": "MIT OR Apache-2.0",
   "internalIdentifiersPreserved": true,
-  "status": "Implemented source fork; manual Academy WASM build pending. Full upstream CI and browser behavior not yet verified.",
+  "status": "Initial Academy WASM build passed (41264338108). Explicit WebGL2 query follow-up awaiting its own build and browser verification; full upstream CI not run.",
   "colors": {
     "purple": "#160f24",
     "surface": "#241934",

@@ -255,11 +255,19 @@ pub async fn start(canvas_id: String) -> Result<(), JsValue> {
     browse::restore();
     diskcache::init();
     storage::refresh();
+    let mut web_options = eframe::WebOptions::default();
+    // Allow the same explicit WebGL2 baseline as the Film/Sound browser shells.
+    // Worker compositor selection stays independent from the presentation backend.
+    if query_flag("webgl")
+        && let eframe::egui_wgpu::WgpuSetup::CreateNew(c) = &mut web_options.wgpu_options.wgpu_setup
+    {
+        c.instance_descriptor.backends = eframe::wgpu::Backends::GL;
+    }
     let runner = eframe::WebRunner::new();
     runner
         .start(
             canvas,
-            eframe::WebOptions::default(),
+            web_options,
             Box::new(move |cc| {
                 EffectcraftApp::install_ime_reset_hooks(&cc.egui_ctx);
                 CTX.with(|c| *c.borrow_mut() = Some(cc.egui_ctx.clone()));
