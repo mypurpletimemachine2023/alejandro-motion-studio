@@ -15,6 +15,7 @@ impl EffectcraftApp {
             self.mobile.timeline = None;
             self.mobile.viewer = None;
             self.mobile_checkpoint = None;
+            self.mobile.cancelled_boundary = false;
         }
     }
 
@@ -31,12 +32,13 @@ impl EffectcraftApp {
             return;
         }
         let route = self.mobile.touch.filter(raw, self.mobile.bounds);
-        if route.started && !self.mobile.navigate && self.dialog.is_none() {
+        if route.started && !self.mobile.navigate && self.dialog.is_none() && self.mobile_checkpoint.is_none() {
             self.mobile_checkpoint = Some(effectcraft_engine::gesture::Checkpoint::capture(&self.session));
         }
         if route.cancel {
-            if let Some(checkpoint) = self.mobile_checkpoint.take() {
-                checkpoint.cancel(&mut self.session);
+            self.mobile.cancelled_boundary = true;
+            if let Some(checkpoint) = self.mobile_checkpoint.as_ref() {
+                checkpoint.clone().cancel(&mut self.session);
             }
             panels::viewer::cancel_touch(ctx);
             panels::timeline::cancel_touch(ctx);
@@ -46,6 +48,16 @@ impl EffectcraftApp {
 
     pub(crate) fn mobile_finish_input(&mut self, ctx: &egui::Context) {
         if self.fonts_ready && !ctx.will_discard() && !self.mobile.touch.active() && self.mobile.boundary_pending {
+            // The backend's primary-pointer release can arrive in the same UI pass as the
+            // cancellation. Restore after that pass too, before async imports may resume.
+            if self.mobile.cancelled_boundary {
+                panels::viewer::cancel_touch(ctx);
+                panels::timeline::cancel_touch(ctx);
+                if let Some(checkpoint) = self.mobile_checkpoint.take() {
+                    checkpoint.cancel(&mut self.session);
+                }
+            }
+            self.mobile.cancelled_boundary = false;
             self.mobile.boundary_pending = false;
             self.mobile_checkpoint = None;
             ctx.request_repaint();

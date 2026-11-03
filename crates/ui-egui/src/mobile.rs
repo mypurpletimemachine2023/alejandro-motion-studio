@@ -44,6 +44,7 @@ pub struct Runtime {
     pub buttons: Vec<(String, Rect)>,
     pub context: Option<(u64, Option<u64>)>,
     pub boundary_pending: bool,
+    pub cancelled_boundary: bool,
 }
 
 impl Default for Runtime {
@@ -61,6 +62,7 @@ impl Default for Runtime {
             buttons: Vec::new(),
             context: None,
             boundary_pending: false,
+            cancelled_boundary: false,
         }
     }
 }

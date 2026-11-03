@@ -11,6 +11,7 @@ pub fn drain_pending<T>(pending: &mut Vec<T>, input_owned: bool) -> Vec<T> {
     if input_owned { Vec::new() } else { std::mem::take(pending) }
 }
 
+#[derive(Clone)]
 pub struct Checkpoint {
     project: Arc<Project>,
     history: History,
@@ -104,5 +105,25 @@ mod tests {
         assert!(names.contains(&"Imported A") && names.contains(&"Imported B"));
         assert!(!names.contains(&"Uncommitted touch"));
         assert!(pending.is_empty());
+    }
+
+    #[test]
+    fn final_cancel_boundary_rejects_a_late_native_release_edit() {
+        let mut session = Session::default();
+        session.execute("comp.new", json!({"name":"Final boundary", "width":64, "height":64})).unwrap();
+        session.mark_saved();
+        let committed = session.project.clone();
+        let undo_count = session.history.undo.len();
+        let checkpoint = Checkpoint::capture(&session);
+        session.execute("layer.newSolid", json!({"name":"First contact preview"})).unwrap();
+        assert!(checkpoint.clone().cancel(&mut session));
+        // Some web backends deliver the old primary-pointer release after the second contact
+        // has already cancelled its preview. It must remain inside the same cancelled boundary.
+        session.execute("layer.newSolid", json!({"name":"Late release"})).unwrap();
+        assert!(checkpoint.cancel(&mut session));
+        assert!(Arc::ptr_eq(&committed, &session.project));
+        assert!(!session.is_dirty());
+        assert_eq!(session.history.undo.len(), undo_count);
+        assert!(session.history.redo.is_empty());
     }
 }
