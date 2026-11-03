@@ -6,6 +6,11 @@ use std::sync::Arc;
 use crate::{EditorState, History, Session};
 use effectcraft_project::Project;
 
+/// Async imports/opens keep their order and stay queued until the gesture's final UI pass.
+pub fn drain_pending<T>(pending: &mut Vec<T>, input_owned: bool) -> Vec<T> {
+    if input_owned { Vec::new() } else { std::mem::take(pending) }
+}
+
 pub struct Checkpoint {
     project: Arc<Project>,
     history: History,
@@ -77,5 +82,27 @@ mod tests {
         let replacement = s.project.clone();
         assert!(!checkpoint.cancel(&mut s));
         assert!(Arc::ptr_eq(&replacement, &s.project));
+    }
+
+    #[test]
+    fn queued_import_survives_touch_cancel_and_runs_after_the_boundary() {
+        let mut s = Session::default();
+        s.execute("comp.new", json!({"name":"Queue test", "width":64, "height":64})).expect("valid composition");
+        s.mark_saved();
+        let checkpoint = Checkpoint::capture(&s);
+        s.execute("layer.newSolid", json!({"name":"Uncommitted touch"})).expect("valid gesture edit");
+        let mut pending = vec!["Imported A", "Imported B"];
+        assert!(drain_pending(&mut pending, true).is_empty());
+        assert!(checkpoint.cancel(&mut s));
+        // Release/cancel input has arrived, but the final UI pass still owns the boundary.
+        assert!(drain_pending(&mut pending, true).is_empty());
+        assert_eq!(pending, ["Imported A", "Imported B"]);
+        for name in drain_pending(&mut pending, false) {
+            s.execute("layer.newSolid", json!({"name":name})).expect("queued import applies");
+        }
+        let names: Vec<_> = s.project.comps().next().map(|(_, comp)| comp.layers.iter().map(|layer| layer.name.as_str()).collect()).unwrap_or_default();
+        assert!(names.contains(&"Imported A") && names.contains(&"Imported B"));
+        assert!(!names.contains(&"Uncommitted touch"));
+        assert!(pending.is_empty());
     }
 }

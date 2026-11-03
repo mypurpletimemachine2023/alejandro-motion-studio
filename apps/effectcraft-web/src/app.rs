@@ -127,7 +127,8 @@ impl eframe::App for WebApp {
         if let Some(light) = crate::academy::take() {
             self.app.set_theme(ctx, if light { effectcraft_ui_egui::theme::ThemeKind::Light } else { effectcraft_ui_egui::theme::ThemeKind::Dark });
         }
-        let actions = ACTIONS.with(|a| std::mem::take(&mut *a.borrow_mut()));
+        let owned = self.app.mobile.owns_input();
+        let actions = ACTIONS.with(|a| effectcraft_engine::gesture::drain_pending(&mut *a.borrow_mut(), owned));
         for f in actions {
             f(&mut self.app);
         }
@@ -146,7 +147,7 @@ impl eframe::App for WebApp {
             self.persist = true;
         }
         // What a reload comes back to.
-        if self.persist {
+        if self.persist && !self.app.mobile.owns_input() {
             // The app's monotonic clock: `ctx.input(|i| i.time)` is stale in a logic-only tick.
             persist::snapshot(&self.app.session, self.app.now(), 1.0);
         }
@@ -161,7 +162,9 @@ impl eframe::App for WebApp {
 
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         self.app.ui(ui, frame);
-        ACADEMY_LAYOUT.with(|state| *state.borrow_mut() = self.app.mobile.describe().to_string());
+        let mut layout = self.app.mobile.describe();
+        layout["pendingActions"] = json!(ACTIONS.with(|actions| actions.borrow().len()));
+        ACADEMY_LAYOUT.with(|state| *state.borrow_mut() = layout.to_string());
     }
 }
 

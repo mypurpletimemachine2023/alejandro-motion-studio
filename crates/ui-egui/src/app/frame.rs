@@ -157,51 +157,56 @@ impl EffectcraftApp {
             self.session.poll_render();
             ctx.request_repaint_after(std::time::Duration::from_millis(100));
         }
-        if self.session.track_job.is_some() {
-            self.session.poll_track();
-            ctx.request_repaint_after(std::time::Duration::from_millis(50));
-        }
-        if self.session.mask_job.is_some() {
-            self.session.poll_mask_track();
-            ctx.request_repaint_after(std::time::Duration::from_millis(50));
-        }
-        // Background tasks (Content-Aware Fill, Scene Edit Detection, imports).
-        if !self.session.tasks.is_empty() {
-            self.session.poll_jobs();
-            ctx.request_repaint_after(std::time::Duration::from_millis(100));
-        }
-        // Analyses running in a worker (the web app).
-        if !self.session.offloaded.is_empty() {
-            self.session.poll_offload();
-            ctx.request_repaint_after(std::time::Duration::from_millis(100));
-        }
-        // Warp Stabilizer: finish analyses and start queued (re-)analyses in the background.
-        if self.session.warp_job.is_some() || !self.session.warp_pending.is_empty() {
-            self.session.poll_warp(true);
-            self.session.poll_roto(true);
-            ctx.request_repaint_after(std::time::Duration::from_millis(100));
-        }
-        // Roto Brush propagation and Object Matte tracking / Freeze: finish jobs (a Freeze writes
-        // its mattes) and start queued ones in the background.
-        if self.session.roto_job.is_some() || !self.session.roto_pending.is_empty() {
-            self.session.poll_roto(true);
-            ctx.request_repaint_after(std::time::Duration::from_millis(100));
-        }
-        // 3D Camera Tracker: likewise (tracking, then solving).
-        if self.session.camera_job.is_some() || !self.session.camera_pending.is_empty() {
-            self.session.poll_camera(true);
-            ctx.request_repaint_after(std::time::Duration::from_millis(100));
-        }
-        self.run_script_tasks(ctx);
-        self.run_dialog_answers();
-        self.handle_events(ctx);
-        if let Some(rx) = self.command_inbox.take() {
-            while let Ok(id) = rx.try_recv() {
-                if let Err(e) = menus::invoke(self, ctx, &id, json!({})) {
-                    self.ui.status = e;
-                }
+        // Background imports/analyses may complete while a touch tool is previewing edits.
+        // Keep those results queued until the release/cancel UI pass has committed its owner.
+        let external_edits = !self.mobile.owns_input();
+        if external_edits {
+            if self.session.track_job.is_some() {
+                self.session.poll_track();
+                ctx.request_repaint_after(std::time::Duration::from_millis(50));
             }
-            self.command_inbox = Some(rx);
+            if self.session.mask_job.is_some() {
+                self.session.poll_mask_track();
+                ctx.request_repaint_after(std::time::Duration::from_millis(50));
+            }
+            // Background tasks (Content-Aware Fill, Scene Edit Detection, imports).
+            if !self.session.tasks.is_empty() {
+                self.session.poll_jobs();
+                ctx.request_repaint_after(std::time::Duration::from_millis(100));
+            }
+            // Analyses running in a worker (the web app).
+            if !self.session.offloaded.is_empty() {
+                self.session.poll_offload();
+                ctx.request_repaint_after(std::time::Duration::from_millis(100));
+            }
+            // Warp Stabilizer: finish analyses and start queued (re-)analyses in the background.
+            if self.session.warp_job.is_some() || !self.session.warp_pending.is_empty() {
+                self.session.poll_warp(true);
+                self.session.poll_roto(true);
+                ctx.request_repaint_after(std::time::Duration::from_millis(100));
+            }
+            // Roto Brush propagation and Object Matte tracking / Freeze: finish jobs (a Freeze writes
+            // its mattes) and start queued ones in the background.
+            if self.session.roto_job.is_some() || !self.session.roto_pending.is_empty() {
+                self.session.poll_roto(true);
+                ctx.request_repaint_after(std::time::Duration::from_millis(100));
+            }
+            // 3D Camera Tracker: likewise (tracking, then solving).
+            if self.session.camera_job.is_some() || !self.session.camera_pending.is_empty() {
+                self.session.poll_camera(true);
+                ctx.request_repaint_after(std::time::Duration::from_millis(100));
+            }
+            self.run_script_tasks(ctx);
+            self.run_dialog_answers();
+            self.handle_events(ctx);
+            if let Some(rx) = self.command_inbox.take() {
+                while let Ok(id) = rx.try_recv() {
+                    if let Err(e) = menus::invoke(self, ctx, &id, json!({})) {
+                        self.ui.status = e;
+                    }
+                }
+                self.command_inbox = Some(rx);
+            }
         }
         // A close request (the window's button, Quit, `app.quit`) must be answered while hidden.
         // An answered file dialog can change the project, so the answers above run first. The host
@@ -212,10 +217,14 @@ impl EffectcraftApp {
             ctx.send_viewport_cmd(egui::ViewportCommand::Title(title.clone()));
             self.window_title = title;
         }
-        self.tick_autosave(ctx);
+        if external_edits {
+            self.tick_autosave(ctx);
+        }
         self.tick_workspace_autosave(ctx);
         let now = self.now;
-        prefs_live::tick(self, ctx, now);
+        if external_edits {
+            prefs_live::tick(self, ctx, now);
+        }
         // Playback advances without a paint (its frames and the audio clock are background work).
         // Idle prefetch keeps its old condition: it only runs once a viewer has drawn.
         if (self.playback.playing || self.last_viewer_scale.is_some())

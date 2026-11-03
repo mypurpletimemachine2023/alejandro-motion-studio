@@ -41,8 +41,14 @@ impl EffectcraftApp {
             panels::viewer::cancel_touch(ctx);
             panels::timeline::cancel_touch(ctx);
         }
-        if route.ended {
+        self.mobile.boundary_pending |= route.ended || route.cancel;
+    }
+
+    pub(crate) fn mobile_finish_input(&mut self, ctx: &egui::Context) {
+        if self.fonts_ready && !ctx.will_discard() && !self.mobile.touch.active() && self.mobile.boundary_pending {
+            self.mobile.boundary_pending = false;
             self.mobile_checkpoint = None;
+            ctx.request_repaint();
         }
     }
 

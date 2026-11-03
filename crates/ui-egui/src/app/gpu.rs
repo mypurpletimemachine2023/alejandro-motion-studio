@@ -123,6 +123,9 @@ impl EffectcraftApp {
 
     /// Run the commands whose non-blocking file dialogs have been answered.
     pub(crate) fn run_dialog_answers(&mut self) {
+        if self.mobile.owns_input() {
+            return;
+        }
         while let Ok(answer) = self.dialog_answers.1.try_recv() {
             self.file_dialogs.answered();
             menus::dialog_answered(self, answer);

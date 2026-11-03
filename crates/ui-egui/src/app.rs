@@ -185,5 +185,6 @@ impl eframe::App for EffectcraftApp {
     /// Draw one UI pass through `draw`.
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         self.draw(ui, frame);
+        self.mobile_finish_input(ui.ctx());
     }
 }
