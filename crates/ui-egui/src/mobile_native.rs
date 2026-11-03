@@ -104,6 +104,13 @@ impl EffectcraftApp {
             let desktop = std::mem::replace(&mut self.ui.timeline, compact);
             self.panel_body(&mut child, panel, rect);
             self.mobile.timeline = Some(std::mem::replace(&mut self.ui.timeline, desktop));
+        } else if pane == Pane::Preview {
+            let compact = self.mobile.viewer.take().unwrap_or_else(|| self.ui.viewer.clone());
+            let desktop = std::mem::replace(&mut self.ui.viewer, compact);
+            // A locked or secondary desktop viewer must not make the compact editor passive.
+            self.auto.add("panel.Composition", rect, "Composition");
+            panels::viewer::show(self, &mut child, rect);
+            self.mobile.viewer = Some(std::mem::replace(&mut self.ui.viewer, desktop));
         } else {
             self.panel_body(&mut child, panel, rect);
         }

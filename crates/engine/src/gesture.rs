@@ -53,15 +53,15 @@ mod tests {
     #[test]
     fn cancelled_touch_restores_content_redo_and_dirty_state() {
         let mut s = Session::default();
-        let _ = s.execute("comp.new", json!({"name":"Touch test", "width":64, "height":64}));
-        let _ = s.execute("layer.newSolid", json!({"name":"Before"}));
+        s.execute("comp.new", json!({"name":"Touch test", "width":64, "height":64})).expect("valid test composition");
+        s.execute("layer.newSolid", json!({"name":"Before"})).expect("valid test solid");
         s.mark_saved();
-        let _ = s.execute("layer.newSolid", json!({"name":"Redo"}));
+        s.execute("layer.newSolid", json!({"name":"Redo"})).expect("valid redo solid");
         assert!(s.undo());
         let before = s.project.clone();
         let redo = s.history.redo.len();
         let checkpoint = Checkpoint::capture(&s);
-        let _ = s.execute("layer.newSolid", json!({"name":"Interrupted touch"}));
+        s.execute("layer.newSolid", json!({"name":"Interrupted touch"})).expect("valid interrupted solid");
         assert!(checkpoint.cancel(&mut s));
         assert!(Arc::ptr_eq(&before, &s.project));
         assert_eq!(s.history.redo.len(), redo);
