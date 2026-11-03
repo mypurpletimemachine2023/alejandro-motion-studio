@@ -116,6 +116,10 @@ impl eframe::App for WebApp {
     /// Queue downloads, persist the session snapshot when enabled, publish GPU/frame-worker/disk-cache info and close
     /// the IME pass.
     fn logic(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+        crate::academy::attach(ctx);
+        if let Some(light) = crate::academy::take() {
+            self.app.set_theme(ctx, if light { effectcraft_ui_egui::theme::ThemeKind::Light } else { effectcraft_ui_egui::theme::ThemeKind::Dark });
+        }
         let actions = ACTIONS.with(|a| std::mem::take(&mut *a.borrow_mut()));
         for f in actions {
             f(&mut self.app);

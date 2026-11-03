@@ -142,3 +142,5 @@ under [`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt). Forks and 
 ACA derivative: the ArtCraft trademark artwork under docs/brand has been excluded. ACA marks are original text/geometry drawn in code; copyright and other dependency notices are retained.
 
 | `apps/effectcraft-web/web/index.html` inline ACA favicon | ACA fork contributors | Original procedural SVG geometry and system type | MIT OR Apache-2.0 |
+
+| `apps/effectcraft-web/web/academy-bridge.js` | Academy appearance and tutorial bridge | Alejandro Creative Academy | Original source | MIT OR Apache-2.0 |
