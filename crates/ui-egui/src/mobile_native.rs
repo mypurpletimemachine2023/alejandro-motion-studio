@@ -8,6 +8,16 @@ use egui::{Rect, UiBuilder, vec2};
 use serde_json::json;
 
 impl EffectcraftApp {
+    pub(crate) fn mobile_sync_context(&mut self) {
+        let context = (self.session.script_ui.project_epoch, self.session.active_comp_id().map(|id| id.0));
+        if self.mobile.context != Some(context) {
+            self.mobile.context = Some(context);
+            self.mobile.timeline = None;
+            self.mobile.viewer = None;
+            self.mobile_checkpoint = None;
+        }
+    }
+
     pub(crate) fn mobile_store_layout(&mut self) {
         if let Some(config) = self.session.config.as_deref()
             && let Err(error) = config.write(PREFERENCE_FILE, &self.mobile.preference())
@@ -108,7 +118,7 @@ impl EffectcraftApp {
             let compact = self.mobile.viewer.take().unwrap_or_else(|| self.ui.viewer.clone());
             let desktop = std::mem::replace(&mut self.ui.viewer, compact);
             // A locked or secondary desktop viewer must not make the compact editor passive.
-            self.auto.add("panel.Composition", rect, "Composition");
+            self.auto.add(&format!("panel.{}", PanelKind::Composition.id()), rect, "Composition");
             panels::viewer::show(self, &mut child, rect);
             self.mobile.viewer = Some(std::mem::replace(&mut self.ui.viewer, desktop));
         } else {
