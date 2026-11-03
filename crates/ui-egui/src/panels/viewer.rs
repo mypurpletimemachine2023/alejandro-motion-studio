@@ -63,6 +63,14 @@ fn map_id() -> egui::Id {
     egui::Id::unique("viewer-map")
 }
 
+/// A touch pinch/cancel owns the pointer before the release can commit the previous tool.
+pub(crate) fn cancel_touch(ctx: &egui::Context) {
+    ctx.data_mut(|data| {
+        data.remove::<Gesture>(egui::Id::unique("viewer-gesture"));
+        data.remove::<(LayerId, u64)>(pen_id());
+    });
+}
+
 pub fn comp_to_screen(ctx: &egui::Context, p: [f32; 2]) -> Option<Pos2> {
     let m: ViewerMap = ctx.data(|d| d.get_temp(map_id()))?;
     Some(m.to_screen([p[0] as f64, p[1] as f64]))

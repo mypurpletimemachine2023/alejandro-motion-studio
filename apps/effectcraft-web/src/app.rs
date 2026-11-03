@@ -44,6 +44,13 @@ pub fn page_url(rel: &str) -> String {
 thread_local! {
     static ACTIONS: RefCell<Vec<Action>> = const { RefCell::new(Vec::new()) };
     static CTX: RefCell<Option<egui::Context>> = const { RefCell::new(None) };
+    static ACADEMY_LAYOUT: RefCell<String> = const { RefCell::new(String::new()) };
+}
+
+/// Read-only diagnostics of the layout actually drawn, never a game/document command.
+#[wasm_bindgen(js_name = academyLayoutState)]
+pub fn academy_layout_state() -> String {
+    ACADEMY_LAYOUT.with(|state| state.borrow().clone())
 }
 
 /// Run `f` on the UI thread at the next frame.
@@ -154,6 +161,7 @@ impl eframe::App for WebApp {
 
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         self.app.ui(ui, frame);
+        ACADEMY_LAYOUT.with(|state| *state.borrow_mut() = self.app.mobile.describe().to_string());
     }
 }
 

@@ -64,9 +64,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          rustc --edition=2024 --test crates/ui-egui/src/mobile_policy.rs -o "$RUNNER_TEMP/mobile-policy-tests"
+          "$RUNNER_TEMP/mobile-policy-tests"
           cargo xtask web
           mkdir -p dist/web
           cp -a "$CARGO_TARGET_DIR/web/dist/." dist/web/
+      - name: Verify touch cancellation restores artwork and history
+        shell: bash
+        run: cargo test --locked -p effectcraft-engine --lib gesture::tests
       - name: Include licenses and exact source identity
         shell: bash
         run: |

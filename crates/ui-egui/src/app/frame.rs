@@ -375,6 +375,8 @@ impl EffectcraftApp {
         // screen or another comp must stop idle prefetch at a stale scale.
         self.last_viewer_scale = None;
         self.apply_prefs(&ctx);
+        self.mobile_update(ui);
+        ctx.data_mut(|data| data.insert_temp(egui::Id::unique("aca-mobile-navigate"), self.mobile.policy.compact && self.mobile.navigate));
         // Video Preview is a second viewport: only a real pass can update it.
         prefs_live::frame(self, &ctx);
         self.auto.begin_frame();
@@ -398,22 +400,27 @@ impl EffectcraftApp {
             }
         }
         ui.painter().rect_filled(full, 0.0, t.app_bg);
-        let mut top = full.min.y;
-        if self.ui.show_menu_bar {
-            let mb = egui::Rect::from_min_size(full.min, egui::vec2(full.width(), 24.0));
-            let mut child = ui.new_child(egui::UiBuilder::new().max_rect(mb));
-            child.painter().rect_filled(mb, 0.0, t.header_bg);
-            menus::menu_bar(self, &mut child);
-            top = mb.max.y;
+        if self.mobile.policy.compact {
+            self.mobile_draw(ui, full);
+        } else {
+            let mut top = full.min.y;
+            if self.ui.show_menu_bar {
+                let mb = egui::Rect::from_min_size(full.min, egui::vec2(full.width(), 24.0));
+                let mut child = ui.new_child(egui::UiBuilder::new().max_rect(mb));
+                child.painter().rect_filled(mb, 0.0, t.header_bg);
+                menus::menu_bar(self, &mut child);
+                top = mb.max.y;
+            }
+            let header_h = 40.0;
+            let header = egui::Rect::from_min_size(egui::pos2(full.min.x, top), egui::vec2(full.width(), header_h));
+            header::show(self, ui, header);
+            let body = egui::Rect::from_min_max(egui::pos2(full.min.x + 4.0, header.max.y + 2.0), egui::pos2(full.max.x - 4.0, full.max.y - 4.0));
+            crate::color_picker::note_dialog(&ctx, self.dialog);
+            // After the shortcuts, menus and header, which can replace the project (New, Open).
+            self.ui.timeline.scope_links(self.session.script_ui.project_epoch);
+            self.dock_area(ui, body);
+            self.mobile_desktop_selector(&ctx);
         }
-        let header_h = 40.0;
-        let header = egui::Rect::from_min_size(egui::pos2(full.min.x, top), egui::vec2(full.width(), header_h));
-        header::show(self, ui, header);
-        let body = egui::Rect::from_min_max(egui::pos2(full.min.x + 4.0, header.max.y + 2.0), egui::pos2(full.max.x - 4.0, full.max.y - 4.0));
-        crate::color_picker::note_dialog(&ctx, self.dialog);
-        // After the shortcuts, menus and header, which can replace the project (New, Open).
-        self.ui.timeline.scope_links(self.session.script_ui.project_epoch);
-        self.dock_area(ui, body);
         #[cfg(not(target_arch = "wasm32"))]
         prefs_live::dropped_files(self, ui, full);
         if !tab_had_widget_focus {

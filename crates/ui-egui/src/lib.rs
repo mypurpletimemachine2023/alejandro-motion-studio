@@ -34,6 +34,10 @@ pub mod i18n;
 pub mod icons;
 pub mod menu_keys;
 pub mod menus;
+pub mod mobile;
+mod mobile_native;
+pub mod mobile_policy;
+mod mobile_touch;
 pub mod native_menu;
 pub mod panels;
 mod pointer_wrap;
@@ -246,6 +250,8 @@ impl Playback {
 }
 
 pub struct EffectcraftApp {
+    pub mobile: mobile::Runtime,
+    mobile_checkpoint: Option<effectcraft_engine::gesture::Checkpoint>,
     pub session: Session,
     pub ui: UiState,
     workspace_store: workspace_state::WorkspaceStore,

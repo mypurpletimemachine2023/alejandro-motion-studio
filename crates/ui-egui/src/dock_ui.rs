@@ -382,7 +382,7 @@ impl EffectcraftApp {
 
     /// Draw panel `p`'s body in `rect`: register its automation region, put the Composition Navigator above an active
     /// viewer when a nested-comp flow exists, then call the panel's `show` and (for a viewer) the sketch overlay.
-    fn panel_body(&mut self, ui: &mut egui::Ui, p: PanelKind, rect: Rect) {
+    pub(crate) fn panel_body(&mut self, ui: &mut egui::Ui, p: PanelKind, rect: Rect) {
         self.auto.add(&format!("panel.{}", p.id()), rect, p.title());
         let mut content = rect.shrink(1.0);
         let viewer = p == panels::viewers::active_panel(self);

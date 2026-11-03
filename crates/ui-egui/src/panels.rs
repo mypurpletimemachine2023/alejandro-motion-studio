@@ -180,7 +180,8 @@ pub(crate) fn toggle_time_display(app: &mut EffectcraftApp, resp: &egui::Respons
 /// Spacebar held outside a text field: the Hand tool (drags pan the viewer and scroll the
 /// Timeline).
 pub(crate) fn space_hand(ctx: &egui::Context) -> bool {
-    ctx.input(|i| i.key_down(egui::Key::Space)) && !ctx.egui_wants_keyboard_input()
+    (ctx.input(|i| i.key_down(egui::Key::Space)) || ctx.data(|d| d.get_temp::<bool>(egui::Id::unique("aca-mobile-navigate")).unwrap_or(false)))
+        && !ctx.egui_wants_keyboard_input()
 }
 
 /// What a scroll gesture over a viewer (Composition, Layer) does this frame.

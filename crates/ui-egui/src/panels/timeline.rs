@@ -1355,6 +1355,17 @@ fn key_drag_id() -> egui::Id {
     egui::Id::unique("tl-key-drag")
 }
 
+/// Remove uncommitted drag previews before a touch cancellation's primary release.
+pub(crate) fn cancel_touch(ctx: &egui::Context) {
+    ctx.data_mut(|data| {
+        data.remove::<LayerDrag>(layer_drag_id());
+        data.remove::<GroupDrag>(group_drag_id());
+        data.remove::<KeyDrag>(key_drag_id());
+        data.remove::<QuickBar>(quick_bar_id());
+        data.remove::<SwitchDrag>(switch_drag_id());
+    });
+}
+
 /// A Quick Offset drag of selected layer bars (Ctrl/Cmd+Alt, #1012): the bar it started on, where
 /// the pointer started, how many layers it staggers and how many frames the last one has moved.
 #[derive(Clone, Copy, Debug)]
@@ -1686,11 +1697,12 @@ fn layout(app: &mut EffectcraftApp, ui: &egui::Ui, rect: Rect, cid: ItemId, comp
     let ruler_h = 34.0;
     let colhdr_h = 22.0;
     let footer_h = 24.0;
-    let vis = Vis::of(&app.ui.timeline);
-    let left_w = (vis.fixed() + 190.0).clamp(420.0, (rect.width() * 0.72).max(420.0));
+    let compact = app.mobile.policy.compact;
+    let vis = if compact { Vis { keys: true, ..Vis::default() } } else { Vis::of(&app.ui.timeline) };
+    let left_w = if compact { (rect.width() * 0.46).clamp(176.0, 210.0) } else { (vis.fixed() + 190.0).clamp(420.0, (rect.width() * 0.72).max(420.0)) };
     // Columns wider than the pane scroll horizontally (Shift+wheel / trackpad over the outline,
     // or the scroll bar above the footer); the name column keeps its minimum width.
-    let natural_w = vis.fixed() + 190.0;
+    let natural_w = if compact { left_w } else { vis.fixed() + 190.0 };
     let overflow = (natural_w - left_w).max(0.0);
     app.ui.timeline.outline_scroll = app.ui.timeline.outline_scroll.clamp(0.0, overflow);
     let oscroll = app.ui.timeline.outline_scroll;
@@ -1758,7 +1770,7 @@ fn layout(app: &mut EffectcraftApp, ui: &egui::Ui, rect: Rect, cid: ItemId, comp
         tc_rect,
         wa_row,
         fd,
-        rh: t.row_h,
+        rh: if compact { t.row_h.max(44.0) } else { t.row_h },
         max_scroll: 0.0,
         ctx,
         comp: comp.clone(),
@@ -2205,6 +2217,9 @@ fn header_timecode(app: &mut EffectcraftApp, ui: &mut egui::Ui, g: &Tl) {
 
 /// The header's search field and the composition switches.
 fn header_search_and_switches(app: &mut EffectcraftApp, ui: &mut egui::Ui, g: &Tl) {
+    if app.mobile.policy.compact {
+        return;
+    }
     let t = g.t;
     let rect = g.rect;
     let left_w = g.left_w;

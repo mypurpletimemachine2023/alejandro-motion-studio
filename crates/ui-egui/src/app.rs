@@ -34,7 +34,15 @@ impl EffectcraftApp {
     pub fn new(session: Session) -> Self {
         let mut ui = UiState::default();
         let workspace_store = workspace_state::WorkspaceStore::load(session.config.as_deref(), &mut ui);
+        let mut mobile = crate::mobile::Runtime::default();
+        if let Some(config) = session.config.as_deref()
+            && let Ok(Some(text)) = config.read_bounded(crate::mobile::PREFERENCE_FILE, 256)
+        {
+            mobile.load_preference(&text);
+        }
         EffectcraftApp {
+            mobile,
+            mobile_checkpoint: None,
             session,
             ui,
             workspace_store,
@@ -147,6 +155,7 @@ impl eframe::App for EffectcraftApp {
     /// a batch), then prepare pointer wrapping; ending a numeric scrub clears the history merge key so the next edit
     /// starts a new undo step.
     fn raw_input_hook(&mut self, ctx: &egui::Context, raw_input: &mut egui::RawInput) {
+        self.mobile_raw_input(ctx, raw_input);
         raw_input.events.append(&mut self.forwarded.events);
         raw_input.dropped_files.append(&mut self.forwarded.files);
         let injected = self.synthetic_in_flight || !self.synthetic.is_empty();

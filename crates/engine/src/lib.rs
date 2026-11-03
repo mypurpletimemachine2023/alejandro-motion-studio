@@ -14,6 +14,7 @@ mod analysis;
 mod background;
 pub mod cmd;
 mod footage;
+pub mod gesture;
 pub mod history;
 mod home;
 mod interchange;
