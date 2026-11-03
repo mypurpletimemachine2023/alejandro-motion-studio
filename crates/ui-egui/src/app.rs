@@ -184,7 +184,10 @@ impl eframe::App for EffectcraftApp {
 
     /// Draw one UI pass through `draw`.
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
+        let previous_pass = self.ui_pass_seq;
         self.draw(ui, frame);
-        self.mobile_finish_input(ui.ctx());
+        if self.ui_pass_seq != previous_pass {
+            self.mobile_finish_input(ui.ctx());
+        }
     }
 }
